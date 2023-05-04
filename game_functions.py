@@ -48,11 +48,9 @@ def check_events(ai_settings, screen, stats, sb, play_button, help_button, ship,
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            if check_play_button(ai_settings, screen, stats, sb, play_button, ship,
-                              aliens, bullets, mouse_x, mouse_y):
-                return False
-            # check_help_button(ai_settings, screen, help_button, mouse_x, mouse_y)
-            return check_help_button(ai_settings, screen, help_button, mouse_x, mouse_y, hb)
+            check_play_button(ai_settings, screen, stats, sb, play_button, ship,
+                              aliens, bullets, mouse_x, mouse_y)
+            check_help_button(ai_settings, screen, stats, help_button, mouse_x, mouse_y)
 
 
 def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
@@ -81,12 +79,12 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
 
 
 # def check_help_button(ai_settings, screen, help_button, mouse_x, mouse_y):
-def check_help_button(ai_settings, screen, help_button, mouse_x, mouse_y, hb):
+def check_help_button(ai_settings, screen, stats, help_button, mouse_x, mouse_y):
     button_clicked = help_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked:
         # pyautogui.alert("左右键移动飞船，空格键发射子弹")
         # easygui.msgbox("左右键移动飞船，空格键发射子弹", "提示信息", "好的")
-        hb.help_button_clicked = True
+        stats.help_button_clicked = True
         # print("go into check_help_button")
 
 
@@ -105,7 +103,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_bu
     if not stats.game_active:
         play_button.draw_button()
         help_button.draw_button()
-        if hb.help_button_clicked:
+        if stats.help_button_clicked:
             hb.show_help()
     # 让最近绘制的屏幕可见
     pygame.display.flip()
@@ -202,15 +200,6 @@ def change_fleet_direction(ai_settings, aliens):
     ai_settings.fleet_direction *= -1
 
 
-def reset_elements(ai_settings, screen, ship, aliens, bullets):
-    # 清空外星人列表和子弹列表
-    aliens.empty()
-    bullets.empty()
-    # 创建一群新的外星人，并将飞船放到屏幕底端中央
-    create_fleet(ai_settings, screen, ship, aliens)
-    ship.center_ship()
-
-
 def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets):
     """响应被外星人撞到的飞船"""
     if stats.ships_left > 0:
@@ -219,7 +208,6 @@ def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets):
         # 更新记分牌
         sb.prep_ships()
         # print('active:', stats.game_active, 'ships_left:', stats.ships_left)
-        # reset_elements(ai_settings, screen, ship, aliens, bullets)
         # 清空外星人列表和子弹列表
         aliens.empty()
         bullets.empty()
@@ -230,6 +218,7 @@ def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
+        stats.help_button_clicked = False
         pygame.mouse.set_visible(True)
 
 

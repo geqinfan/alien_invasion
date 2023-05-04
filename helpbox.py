@@ -6,7 +6,6 @@ class Helpbox():
 
     def __init__(self, ai_settings, screen):
         """初始化显示帮助涉及的属性"""
-        self.help_button_clicked = False
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.ai_settings = ai_settings

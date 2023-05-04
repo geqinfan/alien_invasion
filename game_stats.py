@@ -7,6 +7,8 @@ class GameStats:
         self.reset_stats()
         # 让游戏一开始处于非活动状态
         self.game_active = False
+        # 让游戏一开始help按钮处于没点击状态
+        self.help_button_clicked = False
         # 在任何情况下都不应重置最高得分
         self.high_score = 0
 
